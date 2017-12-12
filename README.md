@@ -8,9 +8,7 @@ This model container complies with the SageMaker Hosting container requirements.
 ## Build & Run ##
 
 ```sh
-$ cd SageMaker_Spark_Serving
-$ ./sbt
-> jetty:start
+sbt clean assembly; java -jar target/scala-2.11/SageMaker\ Spark\ Serving-assembly-0.1.0-SNAPSHOT.jar
 ```
 ## Test
 

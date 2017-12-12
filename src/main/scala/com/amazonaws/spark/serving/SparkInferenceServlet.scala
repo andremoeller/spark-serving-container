@@ -2,31 +2,33 @@ package com.amazonaws.spark.serving
 
 import org.apache.spark.ml.Model
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.StructType
 import org.scalatra._
 
-class SparkInferenceServlet(val model: Model[_]) extends ScalatraServlet {
+class SparkInferenceServlet(val model: Model[_], val schema : StructType) extends ScalatraServlet {
 
   val spark = SparkSession.builder().master("local").getOrCreate
 
   post("/invocations") {
-    println("invocations")
+    require("application/json".equals(request.getContentType),
+      "The Spark serving container expects requests with application/json content type.")
+
     val body = request.body
-    val df = spark.read.json(body)
+    println("BODY")
     println(body)
-    df.show()
-    val sb = new StringBuilder()
-    val responseBody = model.transform(df).toJSON.collect().mkString
-    println("responseBody")
-    println(responseBody)
-    responseBody
+
+    import spark.implicits._
+
+    // DataFrames serialized to JSON aren't correctly deserialized into a DataFrame as Vectors,
+    // hence the schema.
+    val df = spark.read.schema(schema).json(Seq(body).toDS)
+    response.setContentType("application/json")
+    val resp = model.transform(df).toJSON.collect().mkString
+    resp
   }
 
   get("/ping") {
-    model.toString() + model.explainParams()
-  }
-
-  get("/") {
-    views.html.hello()
+    "Ok"
   }
 
 }

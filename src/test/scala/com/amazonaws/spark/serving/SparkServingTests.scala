@@ -23,7 +23,7 @@ class SparkServingTests extends FlatSpec with MockitoSugar with BeforeAndAfter {
     Seq((0, 18, 1.0, Vectors.dense(0.0, 10.0, 0.5), 1.0))
   ).toDF("id", "hour", "mobile", "userFeatures", "clicked")
 
-  ignore should "use vector assembler, random forest" in {
+  it should "use vector assembler, random forest" in {
     dataset.show()
 
     val assembler = new VectorAssembler()

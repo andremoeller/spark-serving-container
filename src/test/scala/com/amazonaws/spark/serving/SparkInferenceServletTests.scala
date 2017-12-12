@@ -1,9 +1,5 @@
 package com.amazonaws.spark.serving
 
-import org.apache.spark.ml.classification.RandomForestClassifier
-import org.apache.spark.ml.{Pipeline, PipelineModel}
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatra.test.scalatest._
 import org.scalatest.FunSuiteLike

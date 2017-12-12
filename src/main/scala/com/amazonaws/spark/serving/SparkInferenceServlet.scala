@@ -9,9 +9,16 @@ class SparkInferenceServlet(val model: Model[_]) extends ScalatraServlet {
   val spark = SparkSession.builder().master("local").getOrCreate
 
   post("/invocations") {
+    println("invocations")
     val body = request.body
+    val df = spark.read.json(body)
     println(body)
-
+    df.show()
+    val sb = new StringBuilder()
+    val responseBody = model.transform(df).toJSON.collect().mkString
+    println("responseBody")
+    println(responseBody)
+    responseBody
   }
 
   get("/ping") {

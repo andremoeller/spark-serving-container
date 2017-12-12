@@ -23,8 +23,8 @@ class SparkInferenceServletTests extends ScalatraSuite with FunSuiteLike with Sp
   test("POST /invocations on SparkInferenceServlet should make an inference") {
     val payload = dataset.toJSON.head
     post("/invocations", body = payload.getBytes(), headers = Map("Content-Type"->"application/json")) {
-      response.body should contain ("rawPrediction")
-      response.getContentType should equal ("application/json")
+      response.body should include ("prediction")
+      response.getContentType should include ("application/json")
       status should equal (200)
     }
   }

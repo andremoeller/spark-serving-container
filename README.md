@@ -6,7 +6,16 @@
 $ cd SageMaker_Spark_Serving
 $ ./sbt
 > jetty:start
-> browse
+```
+## Test
+
+Running functional tests:
+```sh
+sbt test
 ```
 
-If `browse` doesn't launch your browser, manually open [http://localhost:8080/](http://localhost:8080/) in your browser.
+Or, when the server is running:
+
+```sh
+curl -d "@data/post-data.txt" -H "Content-Type: application/json" -X POST http://localhost:8080/invocations
+```

@@ -15,13 +15,12 @@ resolvers += Classpaths.typesafeReleases
 libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra" % ScalatraVersion,
   "org.scalatra" %% "scalatra-scalatest" % ScalatraVersion % "test",
-  "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",
+//  "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",
   "org.eclipse.jetty" % "jetty-webapp" % "9.2.15.v20160210" % "container;compile",
   "javax.servlet" % "javax.servlet-api" % "3.1.0",
-  "com.sun.jersey" % "jersey-server" % "1.2",
 
-  "ml.combust.mleap" %% "mleap-runtime" % "0.8.1",
-  "org.apache.commons" % "commons-compress" % "1.15",
+//  "ml.combust.mleap" %% "mleap-runtime" % "0.8.1",
+//  "org.apache.commons" % "commons-compress" % "1.15",
   "org.apache.spark" %% "spark-core" % SparkVersion,
   "org.apache.spark" %% "spark-mllib" % SparkVersion,
   "org.apache.spark" %% "spark-sql" % SparkVersion,
@@ -29,5 +28,23 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 )
 
-enablePlugins(SbtTwirl)
+dockerfile in docker := {
+  // The assembly task generates a fat JAR file
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+
+  new Dockerfile {
+    from("java")
+    add(artifact, artifactTargetPath)
+    entryPoint("java", "-jar", artifactTargetPath)
+  }
+}
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", "services", xs @ _*) => MergeStrategy.filterDistinctLines
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
+
+enablePlugins(DockerPlugin)
 enablePlugins(ScalatraPlugin)

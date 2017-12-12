@@ -1,5 +1,10 @@
 # SageMaker Spark Serving #
 
+This model container deserializes a PipelineModel with a VectorAssembler and a RandomForestClassifier and uses the
+PipelineModel to make predictions on JSON data.
+
+This model container complies with the SageMaker Hosting container requirements.
+
 ## Build & Run ##
 
 ```sh

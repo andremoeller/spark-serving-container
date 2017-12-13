@@ -1,10 +1,14 @@
+import java.nio.file.Paths
+
 val ScalatraVersion = "2.6.2"
 
 val SparkVersion = "2.2.0"
 
 organization := "com.amazonaws"
 
-name := "SageMaker Spark Serving"
+name := "SageMaker-Spark-Serving"
+
+assemblyJarName in assembly := "sagemaker-spark-serving-fat-jar.jar"
 
 version := "0.1.0-SNAPSHOT"
 
@@ -15,12 +19,9 @@ resolvers += Classpaths.typesafeReleases
 libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra" % ScalatraVersion,
   "org.scalatra" %% "scalatra-scalatest" % ScalatraVersion % "test",
-//  "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",
   "org.eclipse.jetty" % "jetty-webapp" % "9.2.15.v20160210" % "container;compile",
   "javax.servlet" % "javax.servlet-api" % "3.1.0",
 
-//  "ml.combust.mleap" %% "mleap-runtime" % "0.8.1",
-//  "org.apache.commons" % "commons-compress" % "1.15",
   "org.apache.spark" %% "spark-core" % SparkVersion,
   "org.apache.spark" %% "spark-mllib" % SparkVersion,
   "org.apache.spark" %% "spark-sql" % SparkVersion,
@@ -30,12 +31,17 @@ libraryDependencies ++= Seq(
 
 dockerfile in docker := {
   // The assembly task generates a fat JAR file
-  val artifact: File = assembly.value
+  val artifact : File = assembly.value
   val artifactTargetPath = s"/app/${artifact.name}"
+  val modelPath = "/opt/ml/model"
 
   new Dockerfile {
     from("java")
+    env("MODEL_PATH" -> modelPath)
     add(artifact, artifactTargetPath)
+    //TODO: Remove this line, which is for demonstration purposes only.
+    add(new File("test-pipeline-model"), modelPath)
+    expose(8080)
     entryPoint("java", "-jar", artifactTargetPath)
   }
 }

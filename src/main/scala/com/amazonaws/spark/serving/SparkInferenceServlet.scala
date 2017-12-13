@@ -7,7 +7,7 @@ import org.scalatra._
 
 class SparkInferenceServlet(val model: Model[_], val schema : StructType) extends ScalatraServlet {
 
-  val spark = SparkSession.builder().master("local").getOrCreate
+  val spark = SparkSession.builder().master("local[*]").getOrCreate
 
   post("/invocations") {
     require("application/json".equals(request.getContentType),

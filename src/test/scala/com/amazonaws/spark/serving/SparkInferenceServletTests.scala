@@ -12,7 +12,9 @@ class SparkInferenceServletTests extends ScalatraSuite with FunSuiteLike with Sp
 
   val dataset : DataFrame = spark.read.format("libsvm").load("data/sample_libsvm_data.txt")
 
-  addServlet(new SparkInferenceServlet(loadModel(), dataset.schema), "/*")
+  val pipelineModelPath = "test-pipeline-model"
+
+  addServlet(new SparkInferenceServlet(loadModel(pipelineModelPath), dataset.schema), "/*")
 
   test("GET /ping on SparkInferenceServlet should return status 200 and explain params") {
     get("/ping") {

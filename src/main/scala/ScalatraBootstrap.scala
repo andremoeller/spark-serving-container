@@ -9,6 +9,7 @@ class ScalatraBootstrap extends LifeCycle with SparkModelLoader {
   override def init(context: ServletContext) {
     context.mount(new SparkInferenceServlet(loadModel(),
       // Input DataFrame's schema to deserialize JSON.
+      // TODO: don't hardcode this. This is just for demonstration.
       StructType(Array(
       StructField("label", DoubleType),
       StructField("features", VectorType)))), "/*")

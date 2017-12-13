@@ -22,7 +22,7 @@ class SparkInferenceServlet(val model: Model[_], val schema : StructType) extend
   }
 
   get("/ping") {
-    // Ping should return 200 when the model is loaded.
+    // Ping should return 200 when the model is loaded and ready for inference.
     model.explainParams
     "Ok"
   }

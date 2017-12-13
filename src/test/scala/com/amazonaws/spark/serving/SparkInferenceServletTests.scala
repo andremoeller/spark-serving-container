@@ -7,7 +7,7 @@ import org.scalatest.FunSuiteLike
 class SparkInferenceServletTests extends ScalatraSuite with FunSuiteLike with SparkModelLoader {
 
   val spark : SparkSession = SparkSession.builder
-    .master("local")
+    .master("local[*]")
     .getOrCreate()
 
   val dataset : DataFrame = spark.read.format("libsvm").load("data/sample_libsvm_data.txt")

@@ -39,7 +39,8 @@ dockerfile in docker := {
     from("java")
     env("MODEL_PATH" -> modelPath)
     add(artifact, artifactTargetPath)
-    //TODO: Remove this line, which is for demonstration purposes only.
+    //
+    // SageMaker downloads the
     add(new File("test-pipeline-model"), modelPath)
     expose(8080)
     entryPoint("java", "-jar", artifactTargetPath)

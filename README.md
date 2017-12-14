@@ -33,8 +33,10 @@ docker run -p 8080:8080 com.amazonaws/sagemaker-spark-serving
 time curl -d "@data/post-data.txt" -H "Content-Type: application/json" -X POST http://localhost:8080/invocations
 ```
 
-This shows latency generally between 200ms and 400ms for very small payloads (~2KB).
-The same on data/large-post-data.txt shows latency of about 10 seconds.
+This shows latency generally between 200ms and 400ms for very small payloads (~2KB), and about 2.5 seconds for the first
+inference since the servlet has to load the model.
+
+The same on data/large-post-data.txt (~5MB) shows latency of about 10 seconds.
 
 ### Deploy
 

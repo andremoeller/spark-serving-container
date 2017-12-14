@@ -7,12 +7,13 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
 
-class SparkServingTests extends FlatSpec with MockitoSugar with BeforeAndAfter {
+class SparkPipelineModelTests extends FlatSpec with MockitoSugar with BeforeAndAfter {
 
   val modelPath = "test-pipeline-model"
 
   val spark = SparkSession.builder.master("local").getOrCreate()
 
+  // This just generated the test-pipeline-model. It doesn't test anything in the model container.
   ignore should "use vector assembler, random forest with libsvm dataset" in {
     val dataset = spark.read.format("libsvm").load("data/sample_libsvm_data.txt")
     dataset.show()

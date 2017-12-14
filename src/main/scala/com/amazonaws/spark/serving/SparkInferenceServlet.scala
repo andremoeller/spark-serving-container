@@ -14,8 +14,7 @@ class SparkInferenceServlet(val model: Model[_], val schema : StructType) extend
       "The Spark serving container expects requests with application/json content type.")
     val body = request.body
     import spark.implicits._
-    // DataFrames serialized to JSON aren't correctly deserialized into a DataFrame as Vectors,
-    // hence the schema.
+    // DataFrames serialized to JSON aren't correctly deserialized into a DataFrame as Vectors, so the schema is needed.
     val df = spark.read.schema(schema).json(Seq(body).toDS)
     response.setContentType("application/json")
     model.transform(df).toJSON.collect().mkString

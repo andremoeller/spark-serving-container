@@ -1,5 +1,3 @@
-import java.nio.file.Paths
-
 val ScalatraVersion = "2.6.2"
 
 val SparkVersion = "2.2.0"
@@ -30,7 +28,6 @@ libraryDependencies ++= Seq(
 )
 
 dockerfile in docker := {
-  // The assembly task generates a fat JAR file
   val artifact : File = assembly.value
   val artifactTargetPath = s"/app/${artifact.name}"
   val modelPath = "/opt/ml/model"
@@ -39,8 +36,9 @@ dockerfile in docker := {
     from("java")
     env("MODEL_PATH" -> modelPath)
     add(artifact, artifactTargetPath)
-    //
-    // SageMaker downloads the
+    // This is just used for testing locally with docker.
+    // SageMaker downloads the model data (model.tar.gz) to the model path.
+    // Spark ML ignores this when loading the model.
     add(new File("test-pipeline-model"), modelPath)
     expose(8080)
     entryPoint("java", "-jar", artifactTargetPath)

@@ -30,11 +30,11 @@ docker run -p 8080:8080 com.amazonaws/sagemaker-spark-serving
 ### Test
 
 ```sh
-time curl -d "@data/post-data.txt" -H "Content-Type: application/json" -X POST http://localhost:8080/invocations
+time curl --data-binary "@data/post-data.txt" -H "Content-Type: application/json" -X POST http://localhost:8080/invocations
 ```
 
-This shows latency generally about 300ms for small payloads (~2KB, data/post-data.txt). On large payloads
-(~5MB, data/large-post-data.txt) this shows latency of about 3 seconds.
+This shows latency generally about 300ms for small payloads (~2KB, data/post-data.txt), and about 3 seconds on
+large payloads (~5MB, data/large-post-data.txt).
 
 ### Deploy
 
@@ -139,7 +139,8 @@ val contentType = "application/json"
 // This payload is taken from a DataFrame with a "label" column with a Double and a "features" column with a SparseVector using DataFrame.toJSON
 // The model container deserializes the PipelineModel when the SparkInferenceServlet is initialized and uses it to serve these predictions.
 
-val payload = scala.io.Source.fromFile("data/post-data.txt").mkString
+val data = "data/post-data.txt"
+val payload = scala.io.Source.fromFile(data).mkString
 val body = ByteBuffer.wrap(payload.getBytes)
 val invokeEndpointRequest = new InvokeEndpointRequest().withEndpointName(endpointName).withContentType(contentType).withBody(body)
 val invokeEndpointResponse = sagemakerRuntime.invokeEndpoint(invokeEndpointRequest)

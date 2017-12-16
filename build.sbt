@@ -27,6 +27,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 )
 
+fork in test := true
+envVars in assembly := Map("MODEL_PATH" -> "test-pipeline-model")
+
 dockerfile in docker := {
   val artifact : File = assembly.value
   val artifactTargetPath = s"/app/${artifact.name}"

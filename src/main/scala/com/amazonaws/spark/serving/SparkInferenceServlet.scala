@@ -17,9 +17,9 @@ class SparkInferenceServlet(val model: Model[_], val schema : StructType, val sp
     val body = request.body.trim
     import spark.implicits._
 
-    val df = spark.read.schema(schema).json(body.split("\n").toList.toDS)
-
     response.setContentType("application/json")
+
+    val df = spark.read.schema(schema).json(body.split("\n").toList.toDS)
 
     // Only return the prediction columns.
     val predictions = Model.value

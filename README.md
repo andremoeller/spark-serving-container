@@ -36,6 +36,11 @@ time curl --data-binary "@data/post-data.txt" -H "Content-Type: application/json
 This shows latency generally about 300ms for small payloads (~2KB, data/post-data.txt), and about 3 seconds on
 large payloads (~5MB, data/large-post-data.txt).
 
+In `transform`, `VectorAssembler` calls `first`, which causes two jobs to be run per Invoke Endpoint invocation: one for
+this call to `first` and one for `collect`.Dropping the VectorAssembler and just scoring with the RandomForest model 
+improves latency to about 200ms for small payloads and 600ms for large payloads. The `collect` job takes
+about 40ms for small payloads or 200ms for large payloads.
+
 ### Deploy
 
 Tag and push your image to AWS ECR.

@@ -1,6 +1,6 @@
 val ScalatraVersion = "2.6.2"
 
-val SparkVersion = "2.2.0"
+val SparkVersion = "2.2.1"
 
 organization := "com.amazonaws"
 
@@ -19,7 +19,6 @@ libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra-scalatest" % ScalatraVersion % "test",
   "org.eclipse.jetty" % "jetty-webapp" % "9.2.15.v20160210" % "container;compile",
   "javax.servlet" % "javax.servlet-api" % "3.1.0",
-
   "org.apache.spark" %% "spark-core" % SparkVersion,
   "org.apache.spark" %% "spark-mllib" % SparkVersion,
   "org.apache.spark" %% "spark-sql" % SparkVersion,

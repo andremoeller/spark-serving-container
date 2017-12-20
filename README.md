@@ -33,20 +33,9 @@ docker run -p 8080:8080 com.amazonaws/sagemaker-spark-serving
 time curl --data-binary "@data/post-data.txt" -H "Content-Type: application/json" -X POST http://localhost:8080/invocations
 ```
 
-On my development machine, this shows latency generally about 300ms for small payloads (~2KB, data/post-data.txt),
-about 1s for large payloads (~5MB, data/many-records-post-data.txt) and about 3 seconds on large payloads with one 
-record (~5MB, data/one-large-record-post-data.txt).
-
-#### Note On Latency
-
-In `transform`, `VectorAssembler` calls `first`, which causes two jobs to be run per Invoke Endpoint invocation: one for
-this call to `first` and one for `collect`. Dropping the VectorAssembler and just scoring with the RandomForest model 
-improves latency to about 200ms for small payloads and 600ms for large payloads. The `collect` job takes
-about 40ms for small payloads or 200ms for large payloads.
-
-The upshot is that the Spark job overhead makes this approach of using local spark for scoring slow with larger or
-more complex PipelineModels, particularly for large records, since certain `Transformer`s eagerly evaluate
-the head in certain cases.
+On my development machine, this shows latency generally about 200ms for small payloads (~2KB, data/post-data.txt),
+about 1s for large payloads with many records (~5MB, data/many-records-post-data.txt) and about 1s on large payloads with one 
+record (~5MB, data/one-large-record-post-data.txt), with the first invocation taking about an additional second.
 
 ### Deploy
 

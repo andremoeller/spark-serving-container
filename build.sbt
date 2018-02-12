@@ -35,7 +35,7 @@ dockerfile in docker := {
   val modelPath = "/opt/ml/model"
 
   new Dockerfile {
-    from("java")
+    from("openjdk:8-jre")
     env("MODEL_PATH" -> modelPath)
     add(artifact, artifactTargetPath)
     // This is just used for testing locally with docker.
@@ -43,7 +43,9 @@ dockerfile in docker := {
     // Spark ML ignores this when loading the model.
     add(new File("test-pipeline-model"), modelPath)
     expose(8080)
-    entryPoint("java", "-jar", artifactTargetPath)
+    // Spark requires at least ~0.5G on the heap to create a SparkContext.
+    // Spark calls Runtime.getRuntime.maxMemory to check this.
+    entryPoint("java", "-Xmx2g", "-jar", artifactTargetPath)
   }
 }
 

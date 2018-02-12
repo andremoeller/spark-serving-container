@@ -24,7 +24,7 @@ Yields an image tagged com.amazonaws/sagemaker-spark-serving.
 ### Run
 
 ```
-docker run -p 8080:8080 com.amazonaws/sagemaker-spark-serving
+docker run -p 8080:8080 -p 4040:4040 com.amazonaws/sagemaker-spark-serving
 ```
 
 ### Test
